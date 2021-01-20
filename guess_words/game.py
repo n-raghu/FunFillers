@@ -23,24 +23,26 @@ for l in first_chars:
             if n == 2:
                 breakpoint = True
 
-guessed_letters = set()
+incorrect_letters = set()
 
 
 def map_inputs(letter, guessing, word=word):
     if not letter in word:
-        return guessing
+        return guessing, False
     occurences_ = [i for i,x in enumerate(word) if x == letter]
     for _ in occurences_:
         guessing[_] = letter
-    return guessing
+    return guessing, True
 
 
 while True:
     if ''.join(guess).strip() == word:
-        print('Correct')
+        print(f'Correct, the word is {word}')
         break
-    print('Letters Guessed:', guessed_letters)
+    if len(incorrect_letters) > 0:
+        print('Miss Fired:', incorrect_letters)
     print(''.join(guess))
     in_char = input('Guess next letter:').upper()
-    guessed_letters.add(in_char)
-    guess = map_inputs(in_char, guess)
+    guess, hit = map_inputs(in_char, guess)
+    if not hit:
+        incorrect_letters.add(in_char)
